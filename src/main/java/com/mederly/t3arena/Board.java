@@ -1,12 +1,13 @@
 package com.mederly.t3arena;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * A Tic-Tac-Toe board.
  */
-public class Board {
+public class Board implements Comparable<Board> {
 
     public static final byte PLAYER_X = 1;
     public static final byte PLAYER_O = 2;
@@ -152,5 +153,26 @@ public class Board {
     @Override
     public String toString() {
         return getStringRepresentation();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        } else if (!(o instanceof Board)) {
+            return false;
+        } else {
+            return Arrays.equals(board, ((Board) o).board);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(board);
+    }
+
+    @Override
+    public int compareTo(Board o) {
+        return getNumericRepresentation() - o.getNumericRepresentation();
     }
 }

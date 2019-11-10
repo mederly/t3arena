@@ -1,5 +1,6 @@
 package com.mederly.t3arena.players.minimax;
 
+import com.mederly.t3arena.Board;
 import com.mederly.t3arena.GameState;
 
 import java.util.ArrayList;
@@ -174,5 +175,9 @@ public class StateNode {
                 child.collectAllNodes(allNodes);
             }
         }
+    }
+
+    public Board getBoard() {
+        return gameState.getBoard();
     }
 }
