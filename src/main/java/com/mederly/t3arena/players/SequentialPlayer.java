@@ -7,13 +7,12 @@ import java.util.List;
  */
 public class SequentialPlayer extends PlayerBase {
 
-    @Override
-    protected int selectMyMove(List<Integer> freeFields) {
-        return freeFields.get(0);
+    public SequentialPlayer(String name) {
+        super(name);
     }
 
     @Override
-    public String toString() {
-        return "SequentialPlayer";
+    protected int selectMyMove(List<Integer> freeFields) {
+        return freeFields.get(0);
     }
 }

@@ -1,7 +1,7 @@
 package com.mederly.t3arena;
 
 /**
- * Representation of a generic Tic-Tac-Toe player.
+ * Representation of a Tic-Tac-Toe player.
  *
  * T3 Arena calls an instance of this class in order to make its moves.
  */
@@ -15,8 +15,9 @@ public interface Player {
 
     /**
      * This method is called before a single game starts.
+     * @param side Which side we are playing for? 1 = PLAYER_X, 2 = PLAYER_O
      */
-    void beforeGame();
+    void beforeGame(byte side);
 
     /**
      * Called on opponent move.
@@ -33,4 +34,9 @@ public interface Player {
      * @return The move to be made (1..9)
      */
     int move();
+
+    /**
+     * @return The name of this player.
+     */
+    String getName();
 }

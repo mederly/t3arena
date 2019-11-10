@@ -7,14 +7,13 @@ import java.util.List;
  */
 public class RandomPlayer extends PlayerBase {
 
+    public RandomPlayer(String name) {
+        super(name);
+    }
+
     @Override
     protected int selectMyMove(List<Integer> freeFields) {
         int selected = (int) (Math.random() * freeFields.size());
         return freeFields.get(selected);
-    }
-
-    @Override
-    public String toString() {
-        return "RandomPlayer";
     }
 }

@@ -1,14 +1,27 @@
 package com.mederly.t3arena;
 
+import static com.mederly.t3arena.Board.PLAYER_O;
+import static com.mederly.t3arena.Board.PLAYER_X;
+
 /**
- *  A single game between two Tic Tac Toe algorithms.
+ *  A single game between two specific Tic Tac Toe algorithms (players).
  */
 public class Game {
 
-    private Player playerX;
-    private Player playerO;
+    /**
+     * The first player - i.e. the one that puts X signs on the board.
+     */
+    private final Player playerX;
 
-    private Board board;
+    /**
+     * The second player - i.e. the one that puts O signs on the board.
+     */
+    private final Player playerO;
+
+    /**
+     * The state of the game.
+     */
+    private GameState gameState;
 
     public Game(Player playerX, Player playerO) {
         this.playerX = playerX;
@@ -16,34 +29,36 @@ public class Game {
     }
 
     /**
+     * Executes the game by round-robin invocations of players' methods.
+     *
      * @return The winner. Or 0 if there's a tie.
      */
     public int run() {
-        board = new Board();
-        playerX.beforeGame();
-        playerO.beforeGame();
+        playerX.beforeGame(PLAYER_X);
+        playerO.beforeGame(PLAYER_O);
+        gameState = new GameState();
         for (;;) {
-            board.determineWinner();
-            if (board.isFinished()) {
-                System.out.println("Winner: " + board.getWinner());
-                return board.getWinner();
+            Integer winner = gameState.determineWinner();
+            if (winner != null) {
+                System.out.println("Winner: " + winner);
+                return winner;
             } else {
-                Player currentPlayer = getCurrentPlayer();
-                int move = currentPlayer.move();
-                System.out.println("Player " + board.getTurnDescription() + " played: " + move);
-                board.registerMove(move);
+                int move = getCurrentPlayer().move();
+                System.out.println("Player " + gameState.getTurnDescription() + " played: " + move);
+                gameState.registerMove(move);
                 getCurrentPlayer().onOpponentMove(move);
             }
         }
     }
 
     private Player getCurrentPlayer() {
-        if (board.isTurnX()) {
+        if (gameState.isTurnX()) {
             return playerX;
-        } else if (board.isTurnO()) {
+        } else if (gameState.isTurnO()) {
             return playerO;
         } else {
-            throw new IllegalStateException("X nor O not on the turn! turn = " + board.getTurn());
+            throw new IllegalStateException("X nor O not on the turn! turn = " + gameState.getTurn());
         }
     }
+
 }

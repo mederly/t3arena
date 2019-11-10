@@ -2,6 +2,7 @@ package com.mederly.t3arena;
 
 import com.mederly.t3arena.players.RandomPlayer;
 import com.mederly.t3arena.players.SequentialPlayer;
+import com.mederly.t3arena.players.minimax.MinimaxPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,16 +19,21 @@ public class Arena {
     private void play() {
 
         // Players initialization
-        Player sequential1 = new SequentialPlayer();
-        Player sequential2 = new SequentialPlayer();
-        Player random1 = new RandomPlayer();
-        Player random2 = new RandomPlayer();
+        Player sequential1 = new SequentialPlayer("Sequential1");
+        Player sequential2 = new SequentialPlayer("Sequential2");
+        Player random1 = new RandomPlayer("Random1");
+        Player random2 = new RandomPlayer("Random2");
+        Player minimax1 = new MinimaxPlayer("Minimax1");
+        Player minimax2 = new MinimaxPlayer("Minimax2");
 
         // Matches
         matches = new ArrayList<>();
         runMatch(sequential1, random1);
         runMatch(sequential1, sequential2);
         runMatch(random1, random2);
+        runMatch(minimax1, random1);
+        runMatch(minimax1, sequential1);
+        runMatch(minimax1, minimax2);
 
         // Final results
         System.out.println("----------------------------------------------------------------------");

@@ -1,6 +1,6 @@
 package com.mederly.t3arena.players;
 
-import com.mederly.t3arena.Board;
+import com.mederly.t3arena.GameState;
 import com.mederly.t3arena.Player;
 
 import java.util.List;
@@ -12,31 +12,50 @@ import java.util.List;
 public abstract class PlayerBase implements Player {
 
     /**
-     * Internal representation of the board.
+     * Player's name.
      */
-    private Board board;
+    private final String name;
+
+    /**
+     * Internal representation of the game state.
+     */
+    private GameState gameState;
+
+    protected PlayerBase(String name) {
+        this.name = name;
+    }
 
     public void beforeMatch() {
         // nothing to do here
     }
 
-    public void beforeGame() {
-        board = new Board();
+    public void beforeGame(byte side) {
+        gameState = new GameState();
     }
 
     public void onOpponentMove(int field) {
-        board.registerMove(field);
+        gameState.registerMove(field);
     }
 
     public int move() {
-        List<Integer> freeFields = board.getFreeFields();
+        List<Integer> freeFields = gameState.getBoard().getFreeFields();
         if (freeFields.isEmpty()) {
             throw new IllegalStateException("Why are you calling me? There's no field to take.");
         } else {
             int myMove = selectMyMove(freeFields);
-            board.registerMove(myMove);
+            gameState.registerMove(myMove);
             return myMove;
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 
     /**

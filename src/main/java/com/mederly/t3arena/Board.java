@@ -18,73 +18,55 @@ public class Board {
      *
      * Each field has a value of either 0 (empty), 1 (X), or 2 (O).
      */
-    private byte[][] board;
+    private final byte[][] board;
 
     /**
-     * Whose player's turn we are currently at. Either PLAYER_X (1) or PLAYER_O (2).
+     * Default constructor: creates a new board.
      */
-    private byte turn;
-
-    /**
-     * Has the game finished?
-     */
-    private boolean finished;
-
-    /**
-     * Who won? 1 = PLAYER_X, 2 = PLAYER_O, 0 = tie.
-     */
-    private int winner;
-
     public Board() {
-        initialize();
+        this.board = new byte[][] { new byte[3], new byte[3], new byte[3] };
     }
 
-    private void initialize() {
-        board = new byte[][] { new byte[3], new byte[3], new byte[3] };
-        turn = PLAYER_X;
+    /**
+     * Creates a new board by copying existing one.
+     */
+    public Board(Board original) {
+        this();
+        for (int i = 0; i <= 2; i++) {
+            for (int j = 0; j <= 2; j++) {
+                board[i][j] = original.board[i][j];
+            }
+        }
     }
 
-    public void registerMove(int field) {
-        checkState();
-
+    /**
+     * Registers a move done at this board by the specific player.
+     */
+    public void registerMove(byte player, int field) {
         Coordinates coords = new Coordinates(field);
         int row = coords.getRow();
         int column = coords.getColumn();
 
-        //System.out.println(String.format("field: %d --> row: %d, column: %d", field, row, column));
-
         if (board[row][column] != 0) {
             throw new IllegalStateException("Board at field " + field + " ([" + row + "][" + column + "]) has already a value of " + board[row][column]);
         } else {
-            board[row][column] = turn;
-        }
-        changeTurn();
-    }
-
-    private void changeTurn() {
-        if (turn == PLAYER_X) {
-            turn = PLAYER_O;
-        } else if (turn == PLAYER_O) {
-            turn = PLAYER_X;
-        } else {
-            throw new IllegalStateException("Invalid turn: " + turn);
+            board[row][column] = player;
         }
     }
 
-    private void checkState() {
-        if (board == null) {
-            throw new IllegalStateException("Board is not initialized");
-        }
-        if (turn != PLAYER_X && turn != PLAYER_O) {
-            throw new IllegalStateException("Illegal turn value: " + turn);
-        }
-    }
-
+    /**
+     * Returns a value of the given field.
+     * @param fieldNumber Numeric value from 1 to 9.
+     * @return 0 (empty), 1 (X) or 2 (O)
+     */
     public byte getAt(int fieldNumber) {
         Coordinates c = new Coordinates(fieldNumber);
         return board[c.getRow()][c.getColumn()];
     }
 
+    /**
+     * List of free fields e.g. to choose from when doing our move.
+     */
     public List<Integer> getFreeFields() {
         List<Integer> freeFields = new ArrayList<>();
         for (int i = 1; i <= 9; i++) {
@@ -95,43 +77,26 @@ public class Board {
         return freeFields;
     }
 
-    public int getTurn() {
-        return turn;
-    }
-
-    public boolean isTurnX() {
-        return turn == PLAYER_X;
-    }
-
-    public boolean isTurnO() {
-        return turn == PLAYER_O;
-    }
-
-    public String getTurnDescription() {
-        if (isTurnX()) {
-            return "X";
-        } else if (isTurnO()) {
-            return "O";
-        } else {
-            throw new IllegalStateException("Illegal turn value: " + turn);
-        }
-    }
-
-    public void determineWinner() {
+    /**
+     * Who is the winner, if any?
+     *
+     * @return 1 (PLAYER_X), 2 (PLAYER_O), 0 (tie) or null (game is still in progress)
+     */
+    public Integer getWinner() {
         if (isWinner(PLAYER_X)) {
-            winner = PLAYER_X;
-            finished = true;
+            return (int) PLAYER_X;
         } else if (isWinner(PLAYER_O)) {
-            winner = PLAYER_O;
-            finished = true;
+            return (int) PLAYER_O;
         } else if (getFreeFields().isEmpty()) {
-            winner = 0;
-            finished = true;
+            return 0;
         } else {
-            finished = false;
+            return null;
         }
     }
 
+    /**
+     * Checks if "player" is the winner by looking at his signs in rows, columns and diagonals.
+     */
     private boolean isWinner(byte player) {
         for (int row = 0; row <= 2; row++) {
             if (board[row][0] == player && board[row][1] == player && board[row][2] == player) {
@@ -152,11 +117,40 @@ public class Board {
         }
     }
 
-    public int getWinner() {
-        return winner;
+    /**
+     * @return String representation of the board, e.g. XO-XXO-OOX
+     */
+    public String getStringRepresentation() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= 9; i++) {
+            byte value = getAt(i);
+            switch (value) {
+                case PLAYER_X: sb.append("X"); break;
+                case PLAYER_O: sb.append("O"); break;
+                default: sb.append("-");
+            }
+        }
+        return sb.toString();
     }
 
-    public boolean isFinished() {
-        return finished;
+    /**
+     * @return Numeric representation of the board, giving 0 at empty fields, 1 on Xs and 2 on Os.
+     */
+    public int getNumericRepresentation() {
+        int returnValue = 0;
+        for (int i = 1; i <= 9; i++) {
+            returnValue = returnValue*10;
+            byte value = getAt(i);
+            switch (value) {
+                case PLAYER_X: returnValue += 1; break;
+                case PLAYER_O: returnValue += 2; break;
+            }
+        }
+        return returnValue;
+    }
+
+    @Override
+    public String toString() {
+        return getStringRepresentation();
     }
 }
