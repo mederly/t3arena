@@ -13,6 +13,8 @@ import java.util.TreeMap;
  */
 public class CompleteStatisticsDataSource implements DataSource {
 
+    private String name;
+
     private Map<Board, Statistics> statisticsMap = new TreeMap<>();
 
     public CompleteStatisticsDataSource() {
@@ -76,5 +78,18 @@ public class CompleteStatisticsDataSource implements DataSource {
             System.out.println("No statistics for " + board);
             return new Statistics();
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "CompleteStatisticsDataSource{" +
+                "name='" + name + '\'' +
+                ", entries=" + statisticsMap.size() +
+                '}';
     }
 }

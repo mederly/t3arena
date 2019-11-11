@@ -122,6 +122,11 @@ public class MinimaxPlayer implements Player {
     }
 
     @Override
+    public void afterGame(GameState gameState, List<Integer> moves) {
+        // nothing to do here
+    }
+
+    @Override
     public String getName() {
         return name;
     }

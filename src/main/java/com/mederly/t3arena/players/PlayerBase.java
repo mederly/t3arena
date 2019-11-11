@@ -39,6 +39,11 @@ public abstract class PlayerBase implements Player {
         this.side = side;
     }
 
+    @Override
+    public void afterGame(GameState gameState, List<Integer> moves) {
+        // nothing to do here
+    }
+
     public void onOpponentMove(int field) {
         gameState.registerMove(field);
     }

@@ -1,5 +1,8 @@
 package com.mederly.t3arena;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.mederly.t3arena.Board.PLAYER_O;
 import static com.mederly.t3arena.Board.PLAYER_X;
 
@@ -36,15 +39,20 @@ public class Game {
     public int run() {
         playerX.beforeGame(PLAYER_X);
         playerO.beforeGame(PLAYER_O);
+        List<Integer> moves = new ArrayList<>();
+
         gameState = new GameState();
         for (;;) {
             Integer winner = gameState.determineWinner();
             if (winner != null) {
                 System.out.println("Winner: " + winner);
+                playerX.afterGame(gameState, moves);
+                playerO.afterGame(gameState, moves);
                 return winner;
             } else {
                 int move = getCurrentPlayer().move();
                 System.out.println("Player " + gameState.getTurnDescription() + " played: " + move);
+                moves.add(move);
                 gameState.registerMove(move);
                 getCurrentPlayer().onOpponentMove(move);
             }

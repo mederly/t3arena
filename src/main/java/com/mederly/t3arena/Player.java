@@ -1,5 +1,7 @@
 package com.mederly.t3arena;
 
+import java.util.List;
+
 /**
  * Representation of a Tic-Tac-Toe player.
  *
@@ -18,6 +20,14 @@ public interface Player {
      * @param side Which side we are playing for? 1 = PLAYER_X, 2 = PLAYER_O
      */
     void beforeGame(byte side);
+
+    /**
+     * Called after the game is over. Useful e.g. for self-learning players.
+     *
+     * @param gameState State of the game at the end.
+     * @param moves
+     */
+    void afterGame(GameState gameState, List<Integer> moves);
 
     /**
      * Called on opponent move.

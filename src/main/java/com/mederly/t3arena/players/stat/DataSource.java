@@ -11,4 +11,9 @@ public interface DataSource {
      * Returns statistical information for given board position.
      */
     Statistics getStatistics(Board board);
+
+    /**
+     * @return Data source name (optional).
+     */
+    String getName();
 }

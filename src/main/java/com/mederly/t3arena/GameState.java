@@ -76,12 +76,16 @@ public class GameState {
     }
 
     private void changeTurn() {
-        if (isTurnX()) {
-            turn = PLAYER_O;
-        } else if (isTurnO()) {
-            turn = PLAYER_X;
+        turn = getOtherPlayer(turn);
+    }
+
+    public static byte getOtherPlayer(byte player) {
+        if (player == PLAYER_X) {
+            return PLAYER_O;
+        } else if (player == PLAYER_O) {
+            return PLAYER_X;
         } else {
-            throw new IllegalStateException("X nor O not on the turn! turn = " + turn);
+            throw new IllegalStateException("Invalid player specification: " + player);
         }
     }
 
