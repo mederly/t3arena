@@ -162,13 +162,19 @@ public class Board implements Comparable<Board> {
         } else if (!(o instanceof Board)) {
             return false;
         } else {
-            return Arrays.equals(board, ((Board) o).board);
+            return Arrays.equals(board[0], ((Board) o).board[0])
+                    && Arrays.equals(board[1], ((Board) o).board[1])
+                    && Arrays.equals(board[1], ((Board) o).board[1]);
         }
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(board);
+        int hash = 1;
+        hash = hash*31 + Arrays.hashCode(board[0]);
+        hash = hash*31 + Arrays.hashCode(board[1]);
+        hash = hash*31 + Arrays.hashCode(board[2]);
+        return hash;
     }
 
     @Override

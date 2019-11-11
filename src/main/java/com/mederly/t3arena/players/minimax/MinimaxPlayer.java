@@ -2,6 +2,10 @@ package com.mederly.t3arena.players.minimax;
 
 import com.mederly.t3arena.GameState;
 import com.mederly.t3arena.Player;
+import com.mederly.t3arena.players.EqualMoveSelector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.mederly.t3arena.Board.PLAYER_X;
 
@@ -32,8 +36,14 @@ public class MinimaxPlayer implements Player {
      */
     private final String name;
 
-    public MinimaxPlayer(String name) {
+    /**
+     * How to select among equally-valued moves.
+     */
+    private final EqualMoveSelector equalMoveSelector;
+
+    public MinimaxPlayer(String name, EqualMoveSelector equalMoveSelector) {
         this.name = name;
+        this.equalMoveSelector = equalMoveSelector;
         computeStateTree();
     }
 
@@ -81,26 +91,28 @@ public class MinimaxPlayer implements Player {
 
         // Now let's select the best child to go to. What "the best" is depends on whether we play X or O.
         int maxValue = Integer.MIN_VALUE;
-        int maxChild = -1;
+        List<Integer> bestMoves = new ArrayList<>();
         StateNode[] children = currentNode.getChildren();
         for (int i = 0; i < children.length; i++) {
             StateNode child = children[i];
             if (child != null) {
-                if (side == PLAYER_X) {
-                    if (maxChild == -1 || child.getValueForX() > maxValue) {
-                        maxChild = i;
-                        maxValue = child.getValueForX();
-                    }
-                } else {
-                    if (maxChild == -1 || child.getValueForO() > maxValue) {
-                        maxChild = i;
-                        maxValue = child.getValueForO();
-                    }
+                int currentValue = side == PLAYER_X ? child.getValueForX() : child.getValueForO();
+                if (bestMoves.isEmpty() || currentValue > maxValue) {
+                    bestMoves.clear();
+                    bestMoves.add(i+1);
+                    maxValue = currentValue;
+                } else if (currentValue == maxValue) {
+                    bestMoves.add(i+1);
                 }
             }
         }
-        if (maxChild != -1) {
-            int myMove = maxChild + 1;
+        if (!bestMoves.isEmpty()) {
+            int myMove;
+            if (bestMoves.size() > 1) {
+                myMove = equalMoveSelector.selectMove(bestMoves);
+            } else {
+                myMove = bestMoves.get(0);
+            }
             registerMove(myMove);
             return myMove;
         } else {
@@ -120,7 +132,6 @@ public class MinimaxPlayer implements Player {
     private void computeStateTree() {
         stateTreeRoot = new StateNode(new GameState());
         stateTreeRoot.evaluate();
-        //stateTreeRoot.dumpTree(0);
     }
 
     @Override

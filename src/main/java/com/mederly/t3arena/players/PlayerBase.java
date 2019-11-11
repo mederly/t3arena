@@ -19,7 +19,12 @@ public abstract class PlayerBase implements Player {
     /**
      * Internal representation of the game state.
      */
-    private GameState gameState;
+    protected GameState gameState;
+
+    /**
+     * What side we are playing for.
+     */
+    protected byte side;
 
     protected PlayerBase(String name) {
         this.name = name;
@@ -31,6 +36,7 @@ public abstract class PlayerBase implements Player {
 
     public void beforeGame(byte side) {
         gameState = new GameState();
+        this.side = side;
     }
 
     public void onOpponentMove(int field) {

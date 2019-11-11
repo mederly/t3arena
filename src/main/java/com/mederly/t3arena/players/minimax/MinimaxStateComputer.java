@@ -28,7 +28,7 @@ public class MinimaxStateComputer {
      * Selects unique states i.e. states that have different boards. Checks that states with the same boards have the same
      * evaluations for X and O.
      */
-    private static Map<Board, StateNode> getUniqueStates(StateNode stateTreeRoot) {
+    public static Map<Board, StateNode> getUniqueStates(StateNode stateTreeRoot) {
         Map<Board, StateNode> uniqueStates = new TreeMap<>();
         for (StateNode stateNode : stateTreeRoot.getAllNodes()) {
             Board board = stateNode.getBoard();
